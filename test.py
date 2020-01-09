@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     ]
 
-    writerToXls("data.xls",data,sheetByNameOrIndex="default3",append=False)
+    writerToXls("data.xls",data,sheetByNameOrIndex="default3",appendSheet=False)
     exit()
 
 
