@@ -4,7 +4,7 @@ def gengeralParamForParserTable(tag:str,attrs:dict=None,splitStart:int=None,spli
     param = {'tag': tag, 'attrs': attrs, 'splitStart': splitStart, 'splitEnd': splitEnd}
     return param
 
-def parserTable(soup:BeautifulSoup,searchParams:list,curFloor = 0,searchData=[]):
+def parserTable(soup:BeautifulSoup,searchParams:list,curFloor = 0,searchData=[]) -> list:
     if curFloor==len(searchParams):
         return searchData
     param = searchParams[curFloor]

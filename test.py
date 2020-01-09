@@ -3,6 +3,7 @@ from mutool.htmlparser import *
 from mutool.annotation import *
 from mutool.validate import *
 from mutool.output import *
+from mutool.writer import *
 
 
 from bs4 import BeautifulSoup
@@ -58,6 +59,16 @@ def func2():
 
 
 if __name__ == "__main__":
+
+    data = [
+        ["张三", "男", "19", "杭州", "研发工程师"],
+         ["李四", "男", "22", "北京", "医生"],
+         ["王五", "女", "33", "珠海", "出租车司机"]
+
+    ]
+
+    writerToXls("data.xls",data,sheetByNameOrIndex="default3",append=False)
+    exit()
 
 
     for i in range(0, 100000, 1024):  # 模拟文件的传输

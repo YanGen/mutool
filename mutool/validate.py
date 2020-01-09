@@ -18,13 +18,13 @@ def validatePath(path) -> bool:
             return True
 
 # 获取文件流
-def validateFileStream(path,mode="a",retryNumber=10,sleepTime=0.5):
+def validateFileStream(path,mode="a",retryNumber=10,sleepTime=0.5,encoding="gbk"):
 
     @retry(retryNumber)
     @sleep(sleepTime)
     def spin(path,mode):
         try:
-            f = open(path,mode=mode)
+            f = open(path,mode=mode,encoding=encoding)
         except:
             print("尝试获取 {} 写入权失败~重新尝试".format(path))
             raise Exception
