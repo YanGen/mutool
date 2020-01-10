@@ -11,7 +11,7 @@ def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
     csvFile = validateFileStream(path,mode=mode,encoding=encoding)
     csvWriter = csv.writer(csvFile)
     for item in data:
-        if type(item) == "list":
+        if isinstance(item,list):
             csvWriter.writerow(codingList(item))
     csvFile.close()
 

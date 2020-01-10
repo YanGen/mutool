@@ -25,3 +25,4 @@ if __name__ == '__main__':
     print("豪秒级时间戳",currentMillisecondTimestamp())
     print("日期转时间戳",dateToTimestamp())
     print("时间戳转日期",timestampToDate())
+    print("ceshi",timestampToDate(currentSecondTimestamp()-60*24*60,format="%Y%m%d"))

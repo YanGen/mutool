@@ -24,7 +24,7 @@ def validateFileStream(path,mode="a",retryNumber=10,sleepTime=0.5,encoding="gbk"
     @sleep(sleepTime)
     def spin(path,mode):
         try:
-            f = open(path,mode=mode,encoding=encoding)
+            f = open(path,mode=mode,encoding=encoding,newline="")
         except:
             print("尝试获取 {} 写入权失败~重新尝试".format(path))
             raise Exception
@@ -37,9 +37,9 @@ def validateFileStream(path,mode="a",retryNumber=10,sleepTime=0.5,encoding="gbk"
 def codingList(dataList,coding="gbk") -> list:
     newData = []
     for item in dataList:
-        if type(item) == "str":
+        if isinstance(item,str):
             newData.append(item.encode(coding,"ignore").decode(coding,"ignore"))
-        elif type(item) == "list":
+        elif isinstance(item,list):
             newData.append(codingList(item,coding))
         else:
             newData.append(item)
