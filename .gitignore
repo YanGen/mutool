@@ -2,3 +2,7 @@
 .idea/
 
 mutool/__pycache__/
+
+所有/
+
+newsSpider.py
