@@ -14,7 +14,7 @@ def writerToText(path:str,text:str,append=True,encoding="gbk")->bool:
 
 def writerToMedia(path:str,stream:bytes,append=True,encoding=None)->bool:
     mode = "ab" if append else "wb"
-    fileStream = validateFileStream(path,mode=mode,encoding=encoding,newline=None)
+    fileStream = validateFileStream(path,mode=mode,encoding=encoding)
     fileStream.write(stream)
     fileStream.close()
 
@@ -28,7 +28,7 @@ def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
             csvWriter.writerow(codingList(item))
     csvFile.close()
 
-def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendBook=True,encoding="gbk")->bool:
+def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet:bool=True,appendBook:bool=True,encoding="gbk")->bool:
     assert path.endswith(".xls"),"该路径非 .xls 结尾"
 
     if os.path.exists(path):
@@ -38,7 +38,7 @@ def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendB
         readWorkbook = xlrd.open_workbook(path, formatting_info=True)
         writerWorkbook = copy(wb=readWorkbook)  # 完成xlrd对象向xlwt对象转换
         if sheetByNameOrIndex in readWorkbook.sheet_names():
-            if isinstance(sheetByNameOrIndex,list) :
+            if isinstance(sheetByNameOrIndex,int) :
                 sheet = readWorkbook.get_sheet(sheetByNameOrIndex)  # 获得要操作的页
             else:
                 sheet = readWorkbook.sheet_by_name('{}'.format(sheetByNameOrIndex))

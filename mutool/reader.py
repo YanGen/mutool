@@ -1,4 +1,5 @@
 import csv
+import xlrd
 import requests
 
 def csvReader(path,encoding="gbk"):
@@ -6,6 +7,19 @@ def csvReader(path,encoding="gbk"):
     csvReader = csv.reader(csvFile)
     dataList = list(csvReader)
     csvFile.close()
+    return dataList
+def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
+    readWorkbook = xlrd.open_workbook(path, formatting_info=True)
+    assert sheetByNameOrIndex in readWorkbook.sheet_names(),"没有 {} sheet".format(sheetByNameOrIndex)
+
+    if isinstance(sheetByNameOrIndex, int):
+        sheet = readWorkbook.get_sheet(sheetByNameOrIndex)  # 获得要操作的页
+    else:
+        sheet = readWorkbook.sheet_by_name('{}'.format(sheetByNameOrIndex))
+    dataList = []
+    for indRow in range(len(sheet.nrows)):
+        row = sheet.row_values()
+        dataList.append(row)
     return dataList
 
 def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None):
