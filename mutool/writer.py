@@ -15,7 +15,7 @@ def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
             csvWriter.writerow(codingList(item))
     csvFile.close()
 
-def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendBook=True,encoding="gbk"):
+def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendBook=True,encoding="gbk")->bool:
     assert path.endswith(".xls"),"该路径非 .xls 结尾"
 
     if os.path.exists(path):
@@ -25,7 +25,7 @@ def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendB
         readWorkbook = xlrd.open_workbook(path, formatting_info=True)
         writerWorkbook = copy(wb=readWorkbook)  # 完成xlrd对象向xlwt对象转换
         if sheetByNameOrIndex in readWorkbook.sheet_names():
-            if type(sheetByNameOrIndex) == "int":
+            if isinstance(sheetByNameOrIndex,list) :
                 sheet = readWorkbook.get_sheet(sheetByNameOrIndex)  # 获得要操作的页
             else:
                 sheet = readWorkbook.sheet_by_name('{}'.format(sheetByNameOrIndex))
