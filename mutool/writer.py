@@ -1,9 +1,22 @@
 import os
+import requests
 import csv
 import xlwt,xlrd
 from xlutils.copy import copy
 from .validate import validateFileStream,codingList
 
+
+def writerToText(path:str,text:str,append=True,encoding="gbk")->bool:
+    mode = "a" if append else "w"
+    fileStream = validateFileStream(path,mode=mode,encoding=encoding)
+    fileStream.write(codingList([text])[0])
+    fileStream.close()
+
+def writerToMedia(path:str,stream:bytes,append=True,encoding=None)->bool:
+    mode = "ab" if append else "wb"
+    fileStream = validateFileStream(path,mode=mode,encoding=encoding,newline=None)
+    fileStream.write(stream)
+    fileStream.close()
 
 def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
     assert path.endswith(".csv"),"该路径非 .csv 结尾"
@@ -51,3 +64,4 @@ def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet=True,appendB
             sheet.write(rowIndex, cloIndex, data[index][cloIndex])  # 因为单元格从0开始算，所以row不需要加一
     writerWorkbook.save(path)
     return True
+
