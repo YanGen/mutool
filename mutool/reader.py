@@ -36,8 +36,8 @@ def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None):
     return html,req
 
 
-def postApi(url,data, enconding="utf-8",session:requests.session()=None):
+def postApi(url,data=None,enconding="utf-8", session:requests.session()=None):
     req = session if session else requests.session()
     response = req.post(url, data=data, timeout=20)
     html = response.content.decode(enconding)
-    return html
+    return html,req

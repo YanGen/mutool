@@ -14,14 +14,14 @@ def writerToText(path:str,text:str,append=True,encoding="gbk")->bool:
 
 def writerToMedia(path:str,stream:bytes,append=True,encoding=None)->bool:
     mode = "ab" if append else "wb"
-    fileStream = validateFileStream(path,mode=mode,encoding=encoding)
+    fileStream = validateFileStream(path,mode=mode,encoding=encoding,newline=None)
     fileStream.write(stream)
     fileStream.close()
 
 def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
     assert path.endswith(".csv"),"该路径非 .csv 结尾"
     mode = "a" if append else "w"
-    csvFile = validateFileStream(path,mode=mode,encoding=encoding)
+    csvFile = validateFileStream(path,mode=mode,encoding=encoding,retryNumber=10,sleepTime=0.1)
     csvWriter = csv.writer(csvFile)
     for item in data:
         if isinstance(item,list):
