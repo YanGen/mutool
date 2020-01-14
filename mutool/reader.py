@@ -1,6 +1,7 @@
 import csv
 import xlrd
 import requests
+from mutool.annotation import *
 
 def csvReader(path,encoding="gbk"):
     csvFile = open(path, encoding=encoding)
@@ -22,6 +23,7 @@ def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
         dataList.append(row)
     return dataList
 
+@retry(10)
 def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None):
     req = session if session else requests.session()
     response = req.get(url, timeout=10)
