@@ -60,7 +60,6 @@ def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet:bool=True,ap
     for rowIndex in range(rowNum,rowNum + len(data)):
         index += 1
         for cloIndex in range(0,len(data[index])):
-            print(rowIndex, cloIndex, data[index][cloIndex])
             sheet.write(rowIndex, cloIndex, data[index][cloIndex])  # 因为单元格从0开始算，所以row不需要加一
     writerWorkbook.save(path)
     return True

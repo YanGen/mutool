@@ -36,6 +36,7 @@ def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None):
     return html,req
 
 
+@retry(10)
 def postApi(url,data=None,enconding="utf-8", session:requests.session()=None):
     req = session if session else requests.session()
     response = req.post(url, data=data, timeout=20)
