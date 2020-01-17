@@ -29,7 +29,7 @@ def parser(page,key):
 
 def func():
     paramsDict = {
-        "反":5312,
+        # "反":5312,
         "乱":9387,
         "逆":5573,
         "叛":2355,
