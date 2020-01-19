@@ -35,12 +35,64 @@ totalData.append(["县志名","乱","反","叛","逆","贼"])
 for item in dataDict:
     print(item)
     row = [item]
+    tag = False
     for item1 in paramsDict:
         if len(dataDict[item][item1]) > 400:
-            break
-        row.append("共{}个， {}".format(len(dataDict[item][item1]),"，  ".join(dataDict[item][item1])))
+            tag = True
+        row.append("共{}个， {}".format(len(dataDict[item][item1]),"，  ".join(dataDict[item][item1][0:400])))
     if len(row) == 6:
         totalData.append(row)
+
+    if tag:
+        tag = False
+        row = [item]
+        for item1 in paramsDict:
+            if len(dataDict[item][item1]) > 800:
+                tag = True
+            row.append("共{}个， {}".format(len(dataDict[item][item1]),"，  ".join(dataDict[item][item1][400:800])))
+        if len(row) == 6:
+            totalData.append(row)
+
+        if tag:
+            tag = False
+            row = [item]
+            for item1 in paramsDict:
+                if len(dataDict[item][item1]) > 1200:
+                    tag = True
+                row.append("共{}个， {}".format(len(dataDict[item][item1]),"，  ".join(dataDict[item][item1][800:1200])))
+            if len(row) == 6:
+                totalData.append(row)
+            if tag:
+                tag = False
+                row = [item]
+                for item1 in paramsDict:
+                    if len(dataDict[item][item1]) > 1600:
+                        tag = True
+                    row.append(
+                        "共{}个， {}".format(len(dataDict[item][item1]), "，  ".join(dataDict[item][item1][1200:1600])))
+                if len(row) == 6:
+                    totalData.append(row)
+                if tag:
+                    tag = False
+                    row = [item]
+                    for item1 in paramsDict:
+                        if len(dataDict[item][item1]) > 2000:
+                            tag = True
+                        row.append(
+                            "共{}个， {}".format(len(dataDict[item][item1]), "，  ".join(dataDict[item][item1][1600:2000])))
+                    if len(row) == 6:
+                        totalData.append(row)
+                    if tag:
+                        tag = False
+                        row = [item]
+                        for item1 in paramsDict:
+                            if len(dataDict[item][item1]) > 2400:
+                                tag = True
+                            row.append(
+                                "共{}个， {}".format(len(dataDict[item][item1]),
+                                                  "，  ".join(dataDict[item][item1][2000:])))
+                        if len(row) == 6:
+                            totalData.append(row)
 writerToCsv("结果.csv",totalData,append=False)
 
 #
