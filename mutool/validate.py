@@ -3,7 +3,7 @@ import os
 from .annotation import retry,sleep
 # 格式化文件标题
 def validateFileTitle(title:str) -> str:
-    return re.sub(r"[\/\\\:\*\?\"\<\>\|]", '_', title.replace("/r","").replace('\t','').replace("\n",""))
+    return re.sub(r"[\/\\\:\*\?\"\<\>\|]", '_', title.strip().replace("/r","").replace(":","：").replace("  "," ").replace('\t','').replace("\n",""))[:260]
 
 # 验证文件路径 如果不存在会创建
 def validatePath(path) -> bool:
@@ -38,7 +38,7 @@ def codingList(dataList,coding="gbk") -> list:
     newData = []
     for item in dataList:
         if isinstance(item,str):
-            newData.append(item.encode(coding,"ignore").decode(coding,"ignore"))
+            newData.append(item.encode(coding,"ignore").decode(coding,"ignore").strip())
         elif isinstance(item,list):
             newData.append(codingList(item,coding))
         else:

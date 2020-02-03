@@ -24,16 +24,21 @@ def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
     return dataList
 
 @retry(10)
-def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None):
-    req = session if session else requests.session()
-    response = req.get(url, timeout=10)
-    # 从请求对象中拿到相应内容解码成utf-8 格式
-    if rb:
-        return response.content
+def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,timeout=10,sleepTime = 0):
+    @sleep(sleepTime)
+    def inner(url, rb=False,enconding="utf-8",session:requests.session()=None,timeout=10):
+        req = session if session else requests.session()
+        response = req.get(url, timeout=timeout)
+        # 从请求对象中拿到相应内容解码成utf-8 格式
+        if rb:
+            return response.content
 
-    html = response.content.decode(enconding, "ignore")
+        html = response.content.decode(enconding, "ignore")
+        return html,req
 
-    return html,req
+
+
+    return inner(url=url, rb=rb,enconding=enconding,session=session,timeout=timeout)
 
 
 @retry(10)
