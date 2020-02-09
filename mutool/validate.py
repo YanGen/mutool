@@ -44,3 +44,9 @@ def codingList(dataList,coding="gbk") -> list:
         else:
             newData.append(item)
     return newData
+
+# list去重
+def removeDuplication(dataList:list) -> list:
+    pass
+
+

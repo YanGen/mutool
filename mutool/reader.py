@@ -1,3 +1,4 @@
+import os
 import csv
 import xlrd
 import requests
@@ -22,6 +23,23 @@ def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
         row = sheet.row_values()
         dataList.append(row)
     return dataList
+
+# 搜索文件 包括深层次搜索
+def searchFile(dirPath:str,include:str=None,exclude:str=None,startWith:str=None,endWith:str=None,deepSearch=True,result=None):
+    if os.path.isfile(dirPath):
+        return []
+
+    if not result:
+        result = []
+    fls = os.listdir(dirPath)
+    for f in fls:
+        innerDirPath = dirPath + '/' + f
+        if os.path.isfile(innerDirPath) and ((include in f) if include else False or (exclude not in f) if exclude else False or (f.startswith(startWith))if startWith else False or (f.endswith(endWith)) if endWith else False):
+            result.append(innerDirPath)
+        elif not os.path.isfile(innerDirPath) and deepSearch:
+            result = searchFile(innerDirPath,include=include,exclude=exclude,startWith=startWith,endWith=endWith, result=result)
+    return result
+
 
 @retry(10)
 def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,timeout=10,sleepTime = 0):
