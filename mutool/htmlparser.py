@@ -1,5 +1,3 @@
-from bs4 import BeautifulSoup
-
 
 def gengeralParamForParserTable(tag:str,attrs:dict=None,splitStart:int=None,splitEnd:int=None) -> dict:
     param = {'tag': tag, 'attrs': attrs, 'splitStart': splitStart, 'splitEnd': splitEnd}
@@ -10,6 +8,7 @@ def parserTable(soup,searchParams:list,curFloor = 0,searchData=[]) -> list:
         return searchData
     param = searchParams[curFloor]
     curFloor+=1
+
     tags = soup.find_all(param['tag'], attrs=param['attrs'])[param['splitStart']: param['splitEnd']]
 
     dataItem = []

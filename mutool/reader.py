@@ -47,11 +47,11 @@ def searchFile(dirPath:str,include:str=None,exclude:str=None,startWith:str=None,
 
 
 @retry(10)
-def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,timeout=10,sleepTime = 0):
+def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10,sleepTime = 0):
     @sleep(sleepTime)
-    def inner(url, rb=False,enconding="utf-8",session:requests.session()=None,timeout=10):
+    def inner(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10):
         req = session if session else requests.session()
-        response = req.get(url, timeout=timeout)
+        response = req.get(url,params=params, timeout=timeout)
         # 从请求对象中拿到相应内容解码成utf-8 格式
         if rb:
             return response.content
@@ -61,7 +61,7 @@ def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,ti
 
 
 
-    return inner(url=url, rb=rb,enconding=enconding,session=session,timeout=timeout)
+    return inner(url=url, rb=rb,enconding=enconding,params=params,session=session,timeout=timeout)
 
 
 @retry(10)
