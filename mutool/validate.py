@@ -38,7 +38,7 @@ def codingList(dataList,coding="gbk") -> list:
     newData = []
     for item in dataList:
         if isinstance(item,str):
-            newData.append(item.encode(coding,"ignore").decode(coding,"ignore").strip())
+            newData.append(item.encode(coding,"ignore").decode(coding,"ignore"))
         elif isinstance(item,list):
             newData.append(codingList(item,coding))
         else:

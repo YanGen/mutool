@@ -10,6 +10,11 @@ def csvReader(path,encoding="gbk"):
     dataList = list(csvReader)
     csvFile.close()
     return dataList
+def textReader(path,encoding="gbk")->str:
+    txtFile = open(path, encoding=encoding)
+    text = txtFile.read()
+    txtFile.close()
+    return text
 def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
     readWorkbook = xlrd.open_workbook(path, formatting_info=True)
     assert sheetByNameOrIndex in readWorkbook.sheet_names(),"没有 {} sheet".format(sheetByNameOrIndex)
@@ -34,7 +39,7 @@ def searchFile(dirPath:str,include:str=None,exclude:str=None,startWith:str=None,
     fls = os.listdir(dirPath)
     for f in fls:
         innerDirPath = dirPath + '/' + f
-        if os.path.isfile(innerDirPath) and ((include in f) if include else False or (exclude not in f) if exclude else False or (f.startswith(startWith))if startWith else False or (f.endswith(endWith)) if endWith else False):
+        if os.path.isfile(innerDirPath) and (exclude not in f) if exclude else True and ((include in f) if include else False or (f.startswith(startWith))if startWith else False or (f.endswith(endWith)) if endWith else False):
             result.append(innerDirPath)
         elif not os.path.isfile(innerDirPath) and deepSearch:
             result = searchFile(innerDirPath,include=include,exclude=exclude,startWith=startWith,endWith=endWith, result=result)
@@ -52,7 +57,7 @@ def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,ti
             return response.content
 
         html = response.content.decode(enconding, "ignore")
-        return html,req
+        return html,req,response.status_code
 
 
 
@@ -60,8 +65,9 @@ def getSource(url, rb=False,enconding="utf-8",session:requests.session()=None,ti
 
 
 @retry(10)
-def postApi(url,data=None,enconding="utf-8", session:requests.session()=None):
+def postApi(url,data=None,json=None,enconding="utf-8", session:requests.session()=None):
+
     req = session if session else requests.session()
-    response = req.post(url, data=data, timeout=20)
+    response = req.post(url, data=data,json=None, timeout=20)
     html = response.content.decode(enconding)
-    return html,req
+    return html,req,response.status_code
