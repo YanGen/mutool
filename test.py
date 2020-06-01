@@ -1,11 +1,5 @@
-from mutool.writer import *
+from mutool.sender import sendEmail
 
-data = [
-        ["张三", "男", "19", "杭州", "研发工程师"],
-         ["李四", "男", "22", "北京", "医生"],
-         ["王五", "女", "33", "珠海", "出租车司机"]
-
-    ]
-
-writerToXls("data.xls",data,sheetByNameOrIndex="default3",appendSheet=True,appendBook=False)
-exit()
+import mutool.constants as CONSTANS
+CONSTANS.mail_pass = "VPCHYMYMYZEJCIZU"
+sendEmail("test","test")
