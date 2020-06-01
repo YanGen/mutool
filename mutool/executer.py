@@ -9,7 +9,8 @@ def executeFunction(funcation,params:list,threadNumber:int = 10):
         if isinstance(item,list):
             item = (item,None)
             validateParams.append(item)
-
+        else:
+            validateParams.append(item)
 
     taskPool = threadpool.ThreadPool(threadNumber)
     spiders = threadpool.makeRequests(funcation, validateParams)
