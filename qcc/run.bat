@@ -1,2 +1,0 @@
-python baidugongshang.py
-pause
