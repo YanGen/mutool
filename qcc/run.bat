@@ -1,0 +1,2 @@
+python baidugongshang.py
+pause
