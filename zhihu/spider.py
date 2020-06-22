@@ -4,7 +4,12 @@ from mutool.constants import *
 from mutool.date import *
 from bs4 import BeautifulSoup
 import re,json
-import configparser #引入模块
+import queue
+log = {}
+if os.path.exists("log.conf"):
+    lt = open("log.conf").read()
+    if lt:
+        log = json.loads(lt)
 
 req = requests.session()
 req.headers = {
@@ -37,6 +42,17 @@ def baseInfo(user):
     url = "https://www.zhihu.com/people/"+user
     print(url)
     html,req,status = getSource(url,session=req)
+    if '你似乎来到了没有知识存在的荒原' in html:
+        print('你似乎来到了没有知识存在的荒原')
+        writerToText("empty.txt",text=user)
+        return
+    if '该帐号已注销' in html:
+        print('该帐号已注销')
+        writerToText("empty.txt",text=user)
+        return
+    if '安全验证 - 知乎' in html:
+        print("出现验证码")
+        exit()
     reg = re.compile('<span class="ProfileHeader-name">(.*?)</span>').findall(html)
     name = reg[0] if reg else 0
     reg = re.compile('"description":"(.*?)",').findall(html)
@@ -54,70 +70,106 @@ def baseInfo(user):
     writerToCsv("base.csv",[dataItem])
 
 def actionInfo(user):
-    user = 'li-xing-6-47'
+    # user = 'li-xing-6-47'
     global req
+    seri = 0
 
     url = "https://www.zhihu.com/api/v3/feed/members/{}/activities?limit=7&session_id=1164215606571368448&desktop=true".format(user)
+    if user in log:
+        url = log[user]
+    th = False
+
+    sta2020 = []
 
     while 1:
+        if seri >= 3:
+            print("连续五次缺值")
+            break
         html,req,status = getSource(url,session=req)
+        if '你似乎来到了没有知识存在的荒原' in html:
+            break
         jsonData = json.loads(html)
 
         data = jsonData['data'] if jsonData.__contains__("data") else []
+        if not data:
+            print("data 缺值")
+            seri += 1
+            continue
+        if '安全验证 - 知乎' in html:
+            print("出现验证码")
+            exit()
+        seri = 0
+
         save = []
         for item in data:
             target = item['target'] if item.__contains__('target') else None
             if not target:continue
             action_text = item['action_text']
             created_time = item['created_time']
+            if created_time <1577808000:
+                th = True
+                break
             date = timestampToDate(created_time)
             aid = item['target']['id']
             type = item['target']['type']
             turl = None
-            title = None
+            title = target['title'] if target.__contains__('title') else None
             if type == 'question' or type == 'article':
                 turl = 'https://www.zhihu.com/question/{}'.format(target['id'])
+            if type == 'topic':
+                title = target['name']
             if type == 'answer':
                 turl = 'https://www.zhihu.com/question/{}'.format(target['question']['id'])
+                aid = target['question']['id']
                 title = target['question']['title']
-            else:
-                title = target['title']
-
             ks = None
             if turl:
                 html, req, status = getSource(turl, session=req)
                 reg = re.compile('<meta data-react-helmet="true" name="keywords" content="(.*?)"/>').findall(html)
                 ks = reg[0] if reg else None
-            print(target)
             if target.__contains__("content"):
                 if isinstance(target['content'],str):
                     content = BeautifulSoup(target['content'],"html.parser").get_text()
-                elif isinstance(target['content'],list):
+                else:
                     content = ''
-
-
             else:
                 content = None
+
             dataItem = [user,action_text,created_time,date,aid,title,content,ks]
             save.append(dataItem)
-            print(save)
-
+            print(dataItem)
+            if '回答' in action_text or '问题' in action_text:
+                if aid not in sta2020:
+                    sta2020.append(aid)
         writerToCsv("action.csv",save)
         endTag = jsonData['paging']['is_end']
-        if endTag:
+        if endTag or th:
             break
         url = jsonData['paging']['next']
-    exit()
-
+        log[user] = url
+        writerToText('log.conf',text=json.dumps(log),append=False)
+    if sta2020:
+        print(sta2020)
+        # writerToCsv("extendSource.csv",[[user,str(sta2020[-10:])]])
 def func(user):
 
-    baseInfo(user)
     actionInfo(user)
+    baseInfo(user)
+
 
 def main():
+    writerToCsv("base.csv",[[]])
+    writerToText("empty.txt",text="")
     source = open("source.txt").read()
+
+    empty = open("empty.txt").read()
+    base = csvReader('base.csv')
+
+    baseText = ",".join([item[0] if item else "" for item in base])
+
     for user in source.split("\n"):
-        if user:
+        if user and user not in baseText and user not in empty:
             func(user)
 if __name__ == '__main__':
+
     main()
