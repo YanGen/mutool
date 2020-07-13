@@ -1,5 +1,7 @@
 import os,shutil
-
+def test():
+    import sd
+    pass
 def movefile(srcfile,dstfile):
     if not os.path.isfile(srcfile):
         print("%s not exist!"%(srcfile))
@@ -19,3 +21,20 @@ def copyfile(srcfile,dstfile):
             os.makedirs(fpath)                #创建路径
         shutil.copyfile(srcfile,dstfile)      #复制文件
         print("copy %s -> %s"%( srcfile,dstfile))
+
+
+# 将xls另存为xlsx
+def xlsToXlsx(path):
+    import win32com.client as win32
+    from win32com.client import constants
+    # Opening MS Word
+    excel = win32.gencache.EnsureDispatch('Excel.Application')
+    wb = excel.Workbooks.Open(path)
+
+    newfile = path + "x"
+
+    if os.path.exists(newfile):
+        os.remove(newfile)
+    wb.SaveAs(newfile, FileFormat=constants.xlOpenXMLWorkbook)
+    wb.Close()
+    excel.Application.Quit()

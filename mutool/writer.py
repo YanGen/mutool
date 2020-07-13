@@ -1,8 +1,5 @@
 import os
-import requests
 import csv
-import xlwt,xlrd
-from xlutils.copy import copy
 from .validate import validateFileStream,codingList
 
 
@@ -29,6 +26,8 @@ def writerToCsv(path:str,data:list,append=True,encoding="gbk")->bool:
     csvFile.close()
 
 def writerToXls(path:str,data:list,sheetByNameOrIndex=0,appendSheet:bool=True,appendBook:bool=True,encoding="gbk")->bool:
+    import xlwt, xlrd
+    from xlutils.copy import copy
     assert path.endswith(".xls"),"该路径非 .xls 结尾"
 
     if os.path.exists(path):

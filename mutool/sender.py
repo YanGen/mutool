@@ -1,8 +1,9 @@
-import smtplib
-import mutool.constants as CONSTANTS
-from email.mime.text import MIMEText
+
 
 def sendEmail(title,content,receivers = ['zorage@qq.com']):
+    import smtplib
+    import mutool.constants as CONSTANTS
+    from email.mime.text import MIMEText
     # 第三方 SMTP 服务
     mail_host = CONSTANTS.mail_host  # SMTP服务器
     mail_user = CONSTANTS.mail_user  # 用户名

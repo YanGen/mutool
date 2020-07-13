@@ -1,6 +1,5 @@
 import os
 import csv
-import xlrd
 import requests
 from mutool.annotation import *
 
@@ -15,7 +14,8 @@ def textReader(path,encoding="gbk")->str:
     text = txtFile.read()
     txtFile.close()
     return text
-def xlsReader(path:str,sheetByNameOrIndex=0,encoding="gbk")->list:
+def xlsReader(path:str,sheetByNameOrIndex=0)->list:
+    import xlrd
     readWorkbook = xlrd.open_workbook(path, formatting_info=True)
     assert sheetByNameOrIndex in readWorkbook.sheet_names(),"没有 {} sheet".format(sheetByNameOrIndex)
 

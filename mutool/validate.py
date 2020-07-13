@@ -5,6 +5,21 @@ from .annotation import retry,sleep
 def validateFileTitle(title:str) -> str:
     return re.sub(r"[\/\\\:\*\?\"\<\>\|]", '_', title.strip().replace("/r","").replace(":","：").replace("  "," ").replace('\t','').replace("\n",""))[:260]
 
+# 命名重复处理 文件名递增
+def increasingFileName(filename):
+    if not os.path.exists(filename):
+        return filename
+    dFile = filename.split(".")
+    fExt = dFile[-1]
+    lExt = -1 - len(fExt)
+    newFile = filename[:lExt]
+    newFile = re.sub('\(\d\)$', '', newFile)  # remove file sequencial number
+    i = 1
+    while os.path.exists(newFile + "(%s).%s" % (i, fExt)):
+        i += 1
+    dFile = newFile + "(%s).%s" % (i, fExt)
+    return dFile
+
 # 验证文件路径 如果不存在会创建
 def validatePath(path) -> bool:
     if os.path.exists(path):
