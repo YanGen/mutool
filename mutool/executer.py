@@ -1,7 +1,6 @@
-import threadpool
-
 
 def executeFunction(funcation,params:list,threadNumber:int = 10):
+    import threadpool
 
     validateParams = []
     for item in params:
