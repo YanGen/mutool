@@ -1,7 +1,4 @@
 import os,shutil
-def test():
-    import sd
-    pass
 def movefile(srcfile,dstfile):
     if not os.path.isfile(srcfile):
         print("%s not exist!"%(srcfile))
