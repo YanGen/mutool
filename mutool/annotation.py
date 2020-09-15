@@ -34,9 +34,9 @@ def retry(count=1):
     return decorator
 
 
-def tryfun(printdebug=True):
-    def inner1(f):
-        def inner2(*args, **kwargs):
+def tryDo(printdebug=True):
+    def decorator(f):
+        def wrapper(*args, **kwargs):
             try:
                 res = f(*args, **kwargs)
             except Exception as err:
@@ -46,5 +46,5 @@ def tryfun(printdebug=True):
                     print(temp.format(info.f_code.co_filename, info.f_lineno, f.__name__, repr(err)))
                 res = None
             return res
-        return inner2
-    return inner1
+        return wrapper
+    return decorator

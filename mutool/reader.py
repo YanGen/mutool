@@ -46,7 +46,7 @@ def searchFile(dirPath:str,include:str=None,exclude:str=None,startWith:str=None,
     return result
 
 
-@retry(10)
+@retry(20)
 def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10,sleepTime = 0):
     @sleep(sleepTime)
     def inner(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10):
@@ -58,9 +58,6 @@ def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.sessi
 
         html = response.content.decode(enconding, "ignore")
         return html,req,response.status_code
-
-
-
     return inner(url=url, rb=rb,enconding=enconding,params=params,session=session,timeout=timeout)
 
 
