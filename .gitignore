@@ -48,3 +48,5 @@ search/
 组织/
 
 输出/
+
+__pycache__/
