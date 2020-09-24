@@ -9,7 +9,9 @@ def writerToText(path:str,text:str,append=True,encoding="gbk")->bool:
     fileStream.write(codingList([text])[0])
     fileStream.close()
 
-def writerToMedia(path:str,stream:bytes,append=True,encoding=None)->bool:
+def writerToMedia(path:str,stream:bytes,append=True,encoding=None,ignoreExit=False)->bool:
+    if ignoreExit and os.path.exists(path):
+        return
     mode = "ab" if append else "wb"
     fileStream = validateFileStream(path,mode=mode,encoding=encoding,newline=None)
     fileStream.write(stream)
