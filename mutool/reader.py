@@ -1,7 +1,18 @@
 import os
 import csv
 import requests
+import json
+import random
 from mutool.annotation import *
+
+requests.packages.urllib3.disable_warnings()
+prePath = os.getcwd()
+# 切换目录到当前脚本下
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# 这里加载一些东西
+ua = json.loads(open("source/ua.txt").read())
+# 返回旧工作目录
+os.chdir(prePath)
 
 def csvReader(path,encoding="gbk"):
     csvFile = open(path, encoding=encoding)
@@ -16,7 +27,7 @@ def textReader(path,encoding="gbk")->str:
     return text
 def xlsReader(path:str,sheetByNameOrIndex=0)->list:
     import xlrd
-    readWorkbook = xlrd.open_workbook(path, formatting_info=True)
+    readWorkbook = xlrd.open_workbook(path)
     assert sheetByNameOrIndex in readWorkbook.sheet_names(),"没有 {} sheet".format(sheetByNameOrIndex)
 
     if isinstance(sheetByNameOrIndex, int):
@@ -47,11 +58,13 @@ def searchFile(dirPath:str,include:str=None,exclude:str=None,startWith:str=None,
 
 
 @retry(20)
-def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10,sleepTime = 0):
+def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10,sleepTime = 0,switchUA = False):
+    if switchUA:
+        session.headers["User-Agent"] = random.choice(ua)
     @sleep(sleepTime)
     def inner(url, rb=False,enconding="utf-8",params=None,session:requests.session()=None,timeout=10):
         req = session if session else requests.session()
-        response = req.get(url,params=params, timeout=timeout)
+        response = req.get(url,params=params, timeout=timeout,verify=False)
         # 从请求对象中拿到相应内容解码成utf-8 格式
         if rb:
             return response.content
@@ -61,10 +74,10 @@ def getSource(url, rb=False,enconding="utf-8",params=None,session:requests.sessi
     return inner(url=url, rb=rb,enconding=enconding,params=params,session=session,timeout=timeout)
 
 
-@retry(10)
+@retry(20)
 def postApi(url,data=None,json=None,enconding="utf-8", session:requests.session()=None):
 
     req = session if session else requests.session()
-    response = req.post(url, data=data,json=None, timeout=20)
+    response = req.post(url, data=data,json=None, timeout=30)
     html = response.content.decode(enconding)
     return html,req,response.status_code
